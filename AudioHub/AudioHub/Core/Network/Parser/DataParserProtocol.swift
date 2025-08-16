@@ -21,10 +21,11 @@ final class DataParser: DataParserProtocol {
     private let decoder: JSONDecoder
     
     /// Initializer with dependency injection for JSONDecoder
-    /// - Parameter decoder: The JSON decoder to use, defaults to `JSONDecoder` with snake case key decoding strategy
+    /// - Parameter decoder: The JSON decoder to use, defaults to `JSONDecoder` with standard decoding strategy
     init(decoder: JSONDecoder = JSONDecoder()) {
         self.decoder = decoder
-        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+        // Remove snake case conversion to avoid conflicts with CodingKeys
+        // self.decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
     
     func parse<T: Decodable>(_ data: Data) throws -> T {

@@ -21,8 +21,6 @@ final class RequestManager: RequestManagerProtocol {
     /// The data parser used to parse the response data
     private let parser: DataParserProtocol
     
-    public static let shared = RequestManager()
-    
     /// Initializer with dependency injection for APIManager and DataParser
     /// - Parameters:
     ///   - apiManager: The API manager to use, defaults to `APIManager`

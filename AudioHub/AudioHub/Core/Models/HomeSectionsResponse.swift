@@ -4,15 +4,38 @@ import Foundation
 struct HomeSectionsResponse: Codable {
     let sections: [HomeSection]
     let pagination: Pagination
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        // Decode sections
+        do {
+            sections = try container.decode([HomeSection].self, forKey: .sections)
+        } catch {
+            print("❌ Failed to decode sections: \(error)")
+            throw error
+        }
+        
+        // Decode pagination
+        pagination = try container.decode(Pagination.self, forKey: .pagination)
+    }
 }
 
 /// Pagination information for the API response
 struct Pagination: Codable {
     let nextPage: String?
-    let totalPages: Int
+    let totalPages: Int?
     
     enum CodingKeys: String, CodingKey {
         case nextPage = "next_page"
         case totalPages = "total_pages"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        // Make both fields optional since they might not exist
+        nextPage = try container.decodeIfPresent(String.self, forKey: .nextPage)
+        totalPages = try container.decodeIfPresent(Int.self, forKey: .totalPages)
     }
 }
