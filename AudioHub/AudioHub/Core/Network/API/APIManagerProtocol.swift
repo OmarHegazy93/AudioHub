@@ -28,14 +28,12 @@ final class APIManager: APIManagerProtocol {
     
     func perform(_ request: RequestProtocol) async throws -> Data {
         
-        // Attempt to create a URL request from the provided request protocol
-        guard let url = try? request.createURLRequest() else {
-            throw NetworkError.invalidURL
-        }
+        // Create a URL request from the provided request protocol
+        let urlRequest = try request.createURLRequest()
         
         // Perform the network request asynchronously
         do {
-            let (data, response) = try await urlSession.data(for: url)
+            let (data, response) = try await urlSession.data(for: urlRequest)
             
             // Validate the HTTP response status code
             guard let httpResponse = response as? HTTPURLResponse,
