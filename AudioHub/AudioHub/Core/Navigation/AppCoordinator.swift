@@ -1,18 +1,5 @@
 import SwiftUI
 
-/// Protocol for search navigation
-@MainActor
-protocol SearchNavigation {
-    func navigateToSearch()
-}
-
-/// Protocol for home navigation
-@MainActor
-protocol HomeNavigation {
-    func navigateToHome()
-    func resetToHome()
-}
-
 /// Coordinator for managing navigation in the AudioHub app
 @MainActor
 @Observable
@@ -27,11 +14,6 @@ final class AppCoordinator: SearchNavigation, HomeNavigation {
     /// Navigate back to home screen
     func navigateToHome() {
         navigationPath.removeLast()
-    }
-    
-    /// Reset navigation to home
-    func resetToHome() {
-        navigationPath.removeLast(navigationPath.count)
     }
 
     @ViewBuilder
