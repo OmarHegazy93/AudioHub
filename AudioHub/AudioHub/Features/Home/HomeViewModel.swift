@@ -5,16 +5,18 @@ import SwiftUI
 @Observable
 final class HomeViewModel {
     private let api: HomeSectionsAPIProtocol
+    private let coordinator: HomeCoordinator
     
-    var sections: [HomeSection] = []
-    var isLoading = false
-    var isLoadingNextPage = false
-    var errorMessage: String?
-    var hasMorePages = true
-    var currentPage = 1
+    private(set) var sections: [HomeSection] = []
+    private(set) var isLoading = false
+    private(set) var isLoadingNextPage = false
+    private(set) var errorMessage: String?
+    private(set) var hasMorePages = true
+    private(set) var currentPage = 1
     
-    init(api: HomeSectionsAPIProtocol = HomeSectionsAPI()) {
+    init(api: HomeSectionsAPIProtocol = HomeSectionsAPI(), coordinator: HomeCoordinator) {
         self.api = api
+        self.coordinator = coordinator
     }
     
     func loadHomeSections() async {
@@ -57,5 +59,9 @@ final class HomeViewModel {
     
     func refresh() async {
         await loadHomeSections()
+    }
+
+    func goToSearch() {
+        coordinator.navigateToSearch()
     }
 }

@@ -3,8 +3,13 @@ import SwiftUI
 /// Coordinator for managing navigation in the AudioHub app
 @MainActor
 @Observable
-final class AppCoordinator: SearchNavigation, HomeNavigation {
+final class AppCoordinator: HomeCoordinator, SearchCoordinator {
+    private let viewModelsFactory: ViewModelsFactory
     var navigationPath = NavigationPath()
+
+    init(viewModelsFactory: ViewModelsFactory) {
+        self.viewModelsFactory = viewModelsFactory
+    }
     
     /// Navigate to the search screen
     func navigateToSearch() {
@@ -20,7 +25,7 @@ final class AppCoordinator: SearchNavigation, HomeNavigation {
     func view(for destination: AppDestination) -> some View {
         switch destination {
         case .home:
-            HomeView(coordinator: self)
+            HomeView(viewModel: viewModelsFactory.createHomeViewModel(coordinator: self))
         case .search:
             SearchView(coordinator: self)
         }

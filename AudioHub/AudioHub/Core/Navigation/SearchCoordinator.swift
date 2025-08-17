@@ -2,6 +2,6 @@ import Foundation
 
 /// Protocol for home navigation
 @MainActor
-protocol HomeNavigation {
+protocol SearchCoordinator {
     func navigateToHome()
 }

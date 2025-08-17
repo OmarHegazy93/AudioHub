@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State var coordinator: AppCoordinator
-    @State private var viewModel = HomeViewModel()
+    @State private var viewModel: HomeViewModel
+
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         ScrollView {
@@ -16,7 +19,7 @@ struct HomeView: View {
                     Spacer()
                     
                     Button(action: {
-                        coordinator.navigateToSearch()
+                        viewModel.goToSearch()
                     }) {
                         Image(systemName: "magnifyingglass")
                             .font(.title2)
@@ -92,5 +95,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(coordinator: AppCoordinator())
+    HomeView(viewModel: HomeViewModel(api: HomeSectionsAPI(), coordinator: AppCoordinator(viewModelsFactory: ViewModelsFactory(requestManager: RequestManager()))))
 }

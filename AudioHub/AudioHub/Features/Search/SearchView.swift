@@ -47,5 +47,5 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView(coordinator: AppCoordinator())
+    SearchView(coordinator: AppCoordinator(viewModelsFactory: ViewModelsFactory(requestManager: RequestManager())))
 }
