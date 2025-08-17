@@ -12,7 +12,8 @@ protocol ContentItem: Codable, Identifiable {
 
 /// Podcast content item
 struct PodcastItem: ContentItem {
-    let id: String
+    let id = UUID().uuidString
+    let podcastId: String
     let name: String
     let description: String
     let avatarURL: String
@@ -26,16 +27,42 @@ struct PodcastItem: ContentItem {
     let popularityScore: Int?
     
     enum CodingKeys: String, CodingKey {
-        case id = "podcast_id"
+        case id
+        case podcastId = "podcast_id"
         case name, description, avatarURL = "avatar_url", duration, score
         case episodeCount = "episode_count"
         case language, priority, popularityScore = "popularityScore"
     }
     
+    // Custom initializer for testing and direct creation
+    init(
+        podcastId: String,
+        name: String,
+        description: String,
+        avatarURL: String,
+        duration: Int,
+        score: Double,
+        episodeCount: Int,
+        language: String?,
+        priority: Int?,
+        popularityScore: Int?
+    ) {
+        self.podcastId = podcastId
+        self.name = name
+        self.description = description
+        self.avatarURL = avatarURL
+        self.duration = duration
+        self.score = score
+        self.episodeCount = episodeCount
+        self.language = language
+        self.priority = priority
+        self.popularityScore = popularityScore
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        id = try container.decode(String.self, forKey: .id)
+        podcastId = try container.decode(String.self, forKey: .podcastId)
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         avatarURL = try container.decode(String.self, forKey: .avatarURL)
@@ -52,7 +79,8 @@ struct PodcastItem: ContentItem {
 
 /// Episode content item
 struct EpisodeItem: ContentItem {
-    let id: String
+    let id = UUID().uuidString
+    let episodeId: String
     let name: String
     let description: String
     let avatarURL: String
@@ -72,7 +100,8 @@ struct EpisodeItem: ContentItem {
     let podcastPriority: Int
     
     enum CodingKeys: String, CodingKey {
-        case id = "episode_id"
+        case id
+        case episodeId = "episode_id"
         case name, description, avatarURL = "avatar_url", duration, score
         case seasonNumber = "season_number"
         case episodeType = "episode_type"
@@ -85,10 +114,47 @@ struct EpisodeItem: ContentItem {
         case podcastPriority = "podcastPriority"
     }
     
+    // Custom initializer for testing and direct creation
+    init(
+        episodeId: String,
+        name: String,
+        description: String,
+        avatarURL: String,
+        duration: Int,
+        score: Double,
+        seasonNumber: Int?,
+        episodeType: String,
+        podcastName: String,
+        authorName: String,
+        number: Int?,
+        audioURL: String,
+        separatedAudioURL: String,
+        releaseDate: String,
+        podcastPopularityScore: Int,
+        podcastPriority: Int
+    ) {
+        self.episodeId = episodeId
+        self.name = name
+        self.description = description
+        self.avatarURL = avatarURL
+        self.duration = duration
+        self.score = score
+        self.seasonNumber = seasonNumber
+        self.episodeType = episodeType
+        self.podcastName = podcastName
+        self.authorName = authorName
+        self.number = number
+        self.audioURL = audioURL
+        self.separatedAudioURL = separatedAudioURL
+        self.releaseDate = releaseDate
+        self.podcastPopularityScore = podcastPopularityScore
+        self.podcastPriority = podcastPriority
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        id = try container.decode(String.self, forKey: .id)
+        episodeId = try container.decode(String.self, forKey: .episodeId)
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         avatarURL = try container.decode(String.self, forKey: .avatarURL)
@@ -111,7 +177,8 @@ struct EpisodeItem: ContentItem {
 
 /// Audiobook content item
 struct AudiobookItem: ContentItem {
-    let id: String
+    let id = UUID().uuidString
+    let audiobookId: String
     let name: String
     let description: String
     let avatarURL: String
@@ -124,16 +191,40 @@ struct AudiobookItem: ContentItem {
     let releaseDate: String
     
     enum CodingKeys: String, CodingKey {
-        case id = "audiobook_id"
+        case id
+        case audiobookId = "audiobook_id"
         case name, description, avatarURL = "avatar_url", duration, score
         case authorName = "author_name"
         case language, releaseDate = "release_date"
     }
     
+    // Custom initializer for testing and direct creation
+    init(
+        audiobookId: String,
+        name: String,
+        description: String,
+        avatarURL: String,
+        duration: Int,
+        score: Double,
+        authorName: String,
+        language: String?,
+        releaseDate: String
+    ) {
+        self.audiobookId = audiobookId
+        self.name = name
+        self.description = description
+        self.avatarURL = avatarURL
+        self.duration = duration
+        self.score = score
+        self.authorName = authorName
+        self.language = language
+        self.releaseDate = releaseDate
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        id = try container.decode(String.self, forKey: .id)
+        audiobookId = try container.decode(String.self, forKey: .audiobookId)
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         avatarURL = try container.decode(String.self, forKey: .avatarURL)
@@ -149,7 +240,8 @@ struct AudiobookItem: ContentItem {
 
 /// Audio article content item
 struct AudioArticleItem: ContentItem {
-    let id: String
+    let id = UUID().uuidString
+    let articleId: String
     let name: String
     let description: String
     let avatarURL: String
@@ -161,16 +253,38 @@ struct AudioArticleItem: ContentItem {
     let releaseDate: String
     
     enum CodingKeys: String, CodingKey {
-        case id = "article_id"
+        case id
+        case articleId = "article_id"
         case name, description, avatarURL = "avatar_url", duration, score
         case authorName = "author_name"
         case releaseDate = "release_date"
     }
     
+    // Custom initializer for testing and direct creation
+    init(
+        articleId: String,
+        name: String,
+        description: String,
+        avatarURL: String,
+        duration: Int,
+        score: Double,
+        authorName: String,
+        releaseDate: String
+    ) {
+        self.articleId = articleId
+        self.name = name
+        self.description = description
+        self.avatarURL = avatarURL
+        self.duration = duration
+        self.score = score
+        self.authorName = authorName
+        self.releaseDate = releaseDate
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        id = try container.decode(String.self, forKey: .id)
+        articleId = try container.decode(String.self, forKey: .articleId)
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         avatarURL = try container.decode(String.self, forKey: .avatarURL)

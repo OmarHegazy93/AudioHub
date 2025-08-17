@@ -16,7 +16,7 @@ struct PodcastRenderingStrategy: ContentRenderingStrategy {
                 .padding(.horizontal)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
+                HStack(alignment: .top, spacing: 16) {
                     ForEach(content, id: \.id) { item in
                         if let podcast = item as? PodcastItem {
                             PodcastItemView(podcast: podcast)
