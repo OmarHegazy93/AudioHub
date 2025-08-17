@@ -5,7 +5,7 @@ struct SectionView: View {
     
     var body: some View {
         // Use the rendering strategy pattern for better maintainability
-        let strategy = RenderingStrategyFactory.createStrategy(for: section.contentType)
+        let strategy = RenderingStrategyFactory.createStrategy(for: section.type)
         AnyView(strategy.render(content: section.content, sectionName: section.name))
     }
 }
