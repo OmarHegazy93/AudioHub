@@ -9,7 +9,7 @@ import Testing
 import Foundation
 @testable import AudioHub
 
-// MARK: - Mock API for Testing
+// MARK: - Mock Dependencies for Testing
 final class MockHomeSectionsAPI: HomeSectionsAPIProtocol {
     var shouldThrowError = false
     var mockResponse: HomeSectionsResponse?
@@ -28,6 +28,14 @@ final class MockHomeSectionsAPI: HomeSectionsAPIProtocol {
             sections: [],
             pagination: Pagination(nextPage: nil, totalPages: 1)
         )
+    }
+}
+
+final class MockHomeCoordinator: HomeCoordinator {
+    var navigateToSearchCallCount = 0
+    
+    func navigateToSearch() {
+        navigateToSearchCallCount += 1
     }
 }
 
@@ -59,10 +67,12 @@ struct TestDataFactory {
 // MARK: - HomeViewModel Tests
 struct HomeViewModelTests {
     let mockAPI = MockHomeSectionsAPI()
+    let mockCoordinator: MockHomeCoordinator
     var viewModel: HomeViewModel
 
     init() async {
-        viewModel = await HomeViewModel(api: mockAPI)
+        mockCoordinator = await MockHomeCoordinator()
+        viewModel = await HomeViewModel(api: mockAPI, coordinator: mockCoordinator)
     }
     
     // MARK: - Initialization Tests
@@ -92,7 +102,7 @@ struct HomeViewModelTests {
         )
         
         mockAPI.mockResponse = mockResponse
-        let viewModel = await HomeViewModel(api: mockAPI)
+        let viewModel = await HomeViewModel(api: mockAPI, coordinator: mockCoordinator)
         
         await viewModel.loadHomeSections()
         
@@ -209,7 +219,7 @@ struct HomeViewModelTests {
         )
         
         mockAPI.mockResponse = mockResponse
-        let viewModel = await HomeViewModel(api: mockAPI)
+        let viewModel = await HomeViewModel(api: mockAPI, coordinator: mockCoordinator)
         
         await viewModel.loadHomeSections()
         
@@ -230,7 +240,7 @@ struct HomeViewModelTests {
         )
         
         mockAPI.mockResponse = mockResponse
-        let viewModel = await HomeViewModel(api: mockAPI)
+        let viewModel = await HomeViewModel(api: mockAPI, coordinator: mockCoordinator)
         
         await viewModel.loadHomeSections()
         
@@ -250,7 +260,7 @@ struct HomeViewModelTests {
         )
         
         mockAPI.mockResponse = mockResponse
-        let viewModel = await HomeViewModel(api: mockAPI)
+        let viewModel = await HomeViewModel(api: mockAPI, coordinator: mockCoordinator)
         
         await viewModel.loadHomeSections()
         
