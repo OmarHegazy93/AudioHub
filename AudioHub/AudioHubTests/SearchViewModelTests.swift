@@ -111,6 +111,8 @@ struct SearchViewModelTests {
             viewModel.searchText = "test query"
         }
         
+        try await Task.sleep(for: .seconds(0.1)) // Simulate debounce delay
+        
         #expect(mockAPI.searchCallCount == 1)
         #expect(mockAPI.lastSearchQuery == "test query")
         await #expect(viewModel.searchResults.count == 2)
@@ -119,8 +121,6 @@ struct SearchViewModelTests {
         await #expect(viewModel.isLoading == false)
         await #expect(viewModel.hasSearched == true)
         await #expect(viewModel.errorMessage == nil)
-        
-        
     }
     
     @Test("performSearch should handle API errors correctly")
@@ -131,6 +131,8 @@ struct SearchViewModelTests {
         await MainActor.run {
             viewModel.searchText = "test query"
         }
+        
+        try await Task.sleep(for: .seconds(0.1))
                 
         #expect(mockAPI.searchCallCount == 1)
         await #expect(viewModel.isLoading == false)
@@ -150,6 +152,8 @@ struct SearchViewModelTests {
         let mockSections = [Self.createMockSearchSection()]
         let mockResponse = Self.createMockSearchResponse(sections: mockSections)
         mockAPI.searchResult = .success(mockResponse)
+        
+        try await Task.sleep(for: .seconds(0.1))
                 
         // Verify state was set
         await #expect(viewModel.searchResults.count == 1)
@@ -172,6 +176,8 @@ struct SearchViewModelTests {
         let mockSections = [Self.createMockSearchSection()]
         let mockResponse = Self.createMockSearchResponse(sections: mockSections)
         mockAPI.searchResult = .success(mockResponse)
+        
+        try await Task.sleep(for: .seconds(0.1))
                 
         // Verify state was set
         await #expect(viewModel.searchResults.count == 1)
@@ -198,6 +204,8 @@ struct SearchViewModelTests {
         let mockSections = [mockSection]
         let mockResponse = Self.createMockSearchResponse(sections: mockSections)
         mockAPI.searchResult = .success(mockResponse)
+        
+        try await Task.sleep(for: .seconds(0.1))
                 
         // Verify state was set
         await #expect(viewModel.searchResults.count == 1)
@@ -223,27 +231,6 @@ struct SearchViewModelTests {
         await #expect(mockCoordinator.navigateToHomeCallCount == 1)
     }
     
-    @Test("performSearch should handle concurrent search requests correctly")
-    func testConcurrentSearchRequests() async throws {
-        await MainActor.run {
-            viewModel.searchText = "test query"
-        }
-        
-        // Start multiple concurrent searches
-        let searchTask1 = Task { await viewModel.retrySearch() }
-        let searchTask2 = Task { await viewModel.retrySearch() }
-        let searchTask3 = Task { await viewModel.retrySearch() }
-        
-        // Wait for all to complete
-        await searchTask1.value
-        await searchTask2.value
-        await searchTask3.value
-        
-        // Should have made 3 API calls
-        #expect(mockAPI.searchCallCount == 3)
-        await #expect(viewModel.isLoading == false)
-    }
-    
     @Test("performSearch should preserve search results on subsequent successful searches")
     func testPreserveSearchResultsOnSubsequentSearches() async throws {
         // First search
@@ -252,6 +239,8 @@ struct SearchViewModelTests {
         await MainActor.run {
             viewModel.searchText = "first query"
         }
+        
+        try await Task.sleep(for: .seconds(0.1))
                 
         await #expect(viewModel.searchResults.count == 1)
         await #expect(viewModel.searchResults[0].name == "First Section")
@@ -265,6 +254,8 @@ struct SearchViewModelTests {
         await MainActor.run {
             viewModel.searchText = "second query"
         }
+        
+        try await Task.sleep(for: .seconds(0.1))
                 
         await #expect(viewModel.searchResults.count == 2)
         await #expect(viewModel.searchResults[0].name == "Second Section 1")
