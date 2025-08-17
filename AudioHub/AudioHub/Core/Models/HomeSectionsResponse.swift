@@ -5,6 +5,12 @@ struct HomeSectionsResponse: Codable {
     let sections: [HomeSection]
     let pagination: Pagination
     
+    // Custom initializer for testing
+    init(sections: [HomeSection], pagination: Pagination) {
+        self.sections = sections
+        self.pagination = pagination
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -29,6 +35,12 @@ struct Pagination: Codable {
     enum CodingKeys: String, CodingKey {
         case nextPage = "next_page"
         case totalPages = "total_pages"
+    }
+    
+    // Custom initializer for testing
+    init(nextPage: String?, totalPages: Int?) {
+        self.nextPage = nextPage
+        self.totalPages = totalPages
     }
     
     init(from decoder: Decoder) throws {

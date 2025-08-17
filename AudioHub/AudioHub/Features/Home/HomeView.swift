@@ -52,6 +52,29 @@ struct HomeView: View {
                         ForEach(viewModel.sections) { section in
                             SectionView(section: section)
                         }
+                        
+                        // Next page loading indicator
+                        if viewModel.isLoadingNextPage {
+                            HStack {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                Text("Loading more...")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding()
+                        }
+                        
+                        // Load more trigger view
+                        if viewModel.hasMorePages && !viewModel.isLoadingNextPage {
+                            Color.clear
+                                .frame(height: 1)
+                                .onAppear {
+                                    Task {
+                                        await viewModel.loadNextPage()
+                                    }
+                                }
+                        }
                     }
                 }
                 
@@ -59,6 +82,9 @@ struct HomeView: View {
             }
         }
         .navigationBarHidden(true)
+        .refreshable {
+            await viewModel.refresh()
+        }
         .task {
             await viewModel.loadHomeSections()
         }
