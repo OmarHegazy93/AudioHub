@@ -14,7 +14,7 @@ final class HomeViewModel {
     private(set) var hasMorePages = true
     private(set) var currentPage = 1
     
-    init(api: HomeSectionsAPIProtocol = HomeSectionsAPI(), coordinator: HomeCoordinator) {
+    init(api: HomeSectionsAPIProtocol, coordinator: HomeCoordinator) {
         self.api = api
         self.coordinator = coordinator
     }
@@ -51,7 +51,6 @@ final class HomeViewModel {
             hasMorePages = response.pagination.nextPage != nil
         } catch {
             print("❌ Error loading next page: \(error)")
-            // Don't show error for pagination failures, just log them
         }
         
         isLoadingNextPage = false

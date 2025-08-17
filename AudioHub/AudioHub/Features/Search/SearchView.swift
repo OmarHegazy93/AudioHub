@@ -30,30 +30,11 @@ struct SearchView: View {
             .padding(.horizontal)
             .padding(.top)
             
-            // Search text field
-            HStack {
-                TextField("Search podcasts, episodes, audiobooks...", text: $viewModel.searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .onChange(of: viewModel.searchText) { _, _ in
-                        viewModel.searchTextChanged()
-                    }
-                    .onSubmit {
-                        Task {
-                            await viewModel.performSearch()
-                        }
-                    }
-                
-                if !viewModel.searchText.isEmpty {
-                    Button("Search") {
-                        Task {
-                            await viewModel.performSearch()
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
+            TextField("Search podcasts, episodes, audiobooks...", text: $viewModel.searchText)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .onChange(of: viewModel.searchText) { _, _ in
+                    viewModel.searchTextChanged()
                 }
-            }
-            .padding(.horizontal)
-            .padding(.top)
             
             // Search results or placeholder
             if viewModel.isLoading {
@@ -76,7 +57,7 @@ struct SearchView: View {
                     
                     Button("Try Again") {
                         Task {
-                            await viewModel.performSearch()
+                            await viewModel.retrySearch()
                         }
                     }
                     .buttonStyle(.borderedProminent)

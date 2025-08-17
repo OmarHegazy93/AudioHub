@@ -1,13 +1,18 @@
 import Foundation
+import Combine
 import SwiftUI
 
 @Observable
+@MainActor
 final class SearchViewModel {
     // MARK: - Dependencies
     private let searchAPI: SearchAPIProtocol
     private let coordinator: SearchCoordinator
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - State
+    @Published
+    @ObservationIgnored
     var searchText = ""
     private(set) var searchResults: [SearchSection] = []
     private(set) var isLoading = false
@@ -15,13 +20,39 @@ final class SearchViewModel {
     private(set) var hasSearched = false
     
     // MARK: - Initialization
-    init(searchAPI: SearchAPIProtocol = SearchAPI(), coordinator: SearchCoordinator) {
+    init<S: Scheduler>(
+        searchAPI: SearchAPIProtocol,
+        coordinator: SearchCoordinator,
+        scheduler: S = DispatchQueue.main
+    ) {
         self.searchAPI = searchAPI
         self.coordinator = coordinator
+        setupBindings(using: scheduler)
+    }
+    
+    // MARK: - Bindings
+    private func setupBindings(using scheduler: some Scheduler) {
+        $searchText
+            .dropFirst()
+            .removeDuplicates()
+            .debounce(for: .milliseconds(200), scheduler: scheduler)
+            .sink { [weak self] txt in
+                print("✅ schedler: \(scheduler)")
+                print("🔍 Search text changed: \(txt)")
+                
+                Task {
+                    await self?.performSearch()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func retrySearch() async {
+        await performSearch()
     }
     
     // MARK: - Public Methods
-    func performSearch() async {
+    private func performSearch() async {
         guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             searchResults = []
             hasSearched = false
