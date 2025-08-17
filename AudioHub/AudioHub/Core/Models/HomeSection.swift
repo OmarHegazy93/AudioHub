@@ -79,7 +79,6 @@ struct HomeSection: Codable, Identifiable {
         try container.encode(order, forKey: .order)
         
         // Encode content using the factory pattern for consistency
-        let factory = ContentItemFactoryImpl()
         let contentData = try JSONSerialization.data(withJSONObject: content.map { item in
             // Basic properties that all content items share
             var dict: [String: Any] = [

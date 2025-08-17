@@ -191,6 +191,9 @@ struct BinaryGridRenderingStrategy: ContentRenderingStrategy {
 
 /// Factory for creating rendering strategies based on section type
 struct RenderingStrategyFactory {
+    
+    private init() { }
+    
     static func createStrategy(for sectionType: SectionType) -> any ContentRenderingStrategy {
         switch sectionType {
         case .queue:

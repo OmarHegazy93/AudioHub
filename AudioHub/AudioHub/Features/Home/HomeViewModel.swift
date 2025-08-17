@@ -37,7 +37,7 @@ final class HomeViewModel {
     }
     
     func loadNextPage() async {
-        guard hasMorePages && !isLoadingNextPage && currentPage != nil else { return }
+        guard hasMorePages && !isLoadingNextPage && currentPage > 1 else { return }
         
         isLoadingNextPage = true
         
