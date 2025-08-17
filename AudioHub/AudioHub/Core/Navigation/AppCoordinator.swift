@@ -27,7 +27,7 @@ final class AppCoordinator: HomeCoordinator, SearchCoordinator {
         case .home:
             HomeView(viewModel: viewModelsFactory.createHomeViewModel(coordinator: self))
         case .search:
-            SearchView(coordinator: self)
+            SearchView(viewModel: viewModelsFactory.createSearchViewModel(coordinator: self))
         }
     }
 }

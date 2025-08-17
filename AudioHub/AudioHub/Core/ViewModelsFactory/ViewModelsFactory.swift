@@ -16,4 +16,9 @@ final class ViewModelsFactory {
     func createHomeViewModel(coordinator: HomeCoordinator) -> HomeViewModel {
         HomeViewModel(api: HomeSectionsAPI(requestManager: requestManager), coordinator: coordinator)
     }
+    
+    @MainActor
+    func createSearchViewModel(coordinator: SearchCoordinator) -> SearchViewModel {
+        SearchViewModel(searchAPI: SearchAPI(requestManager: requestManager), coordinator: coordinator)
+    }
 }
