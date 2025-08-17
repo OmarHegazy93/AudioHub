@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@main
 struct AudioHubApp: App {
     let coordinator: AppCoordinator
 
@@ -20,6 +19,29 @@ struct AudioHubApp: App {
     var body: some Scene {
         WindowGroup {
             CoordinatorView(coordinator: coordinator)
+        }
+    }
+}
+
+@main
+struct MainEntryPoint {
+    static func main() {
+        guard isProduction() else {
+            TestApp.main()
+            return
+        }
+ 
+        AudioHubApp.main()
+    }
+ 
+    private static func isProduction() -> Bool {
+        return NSClassFromString("XCTestCase") == nil
+    }
+}
+
+struct TestApp: App {
+    var body: some Scene {
+        WindowGroup {
         }
     }
 }
